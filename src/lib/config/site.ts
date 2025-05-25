@@ -11,7 +11,9 @@ export const site: SiteConfig = {
     avatar: '/assets/profile.jpg',
     name: 'Shellkai Huang',
     status: '👾',
-    bio: 'SAIHS CT3C ➔ NTUT EOE\n喜歡玩點伺服器，搞點刷機 & Root，希望有一天能搭建屬於自己的 HomeLab\n#Skills39 #Skills54',
+    bio: 'SAIHS CT3C ➔ NTUT EOE
+喜歡玩點伺服器，搞點刷機 & Root，希望有一天能搭建屬於自己的 HomeLab
+#Skills39 #Skills54',
     // pnpm install @iconify-json/simple-icons
     metadata: [
       {
