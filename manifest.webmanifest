@@ -1,8 +1,8 @@
 {
-  "name": "Shellkai's Blog",
-  "short_name": "Shellkai's Blog",
+  "name": "Shellkai",
+  "short_name": "Shellkai",
   "lang": "zh-TW",
-  "description": "Copyright © ShellkaiTW 2024 - All right reserved\tPowered by SvelteKit/Urara",
+  "description": "Copyright © ShellkaiTW 2025 - All right reserved\tPowered by SvelteKit/Urara",
   "id": "https://shellkaitw.github.io/",
   "start_url": "/",
   "scope": "/",
