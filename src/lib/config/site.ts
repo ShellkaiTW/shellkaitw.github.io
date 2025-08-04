@@ -5,7 +5,7 @@ export const site: SiteConfig = {
   protocol: import.meta.env.URARA_SITE_PROTOCOL ?? import.meta.env.DEV ? 'http://' : 'https://',
   domain: import.meta.env.URARA_SITE_DOMAIN ?? 'shellkaitw.github.io',
   title: "Shellkai",
-  subtitle: "If it works, don't touch it",
+  subtitle: "If it works, don't touch it.",
   lang: 'zh-TW',
   description: 'Copyright © ShellkaiTW 2025 - All right reserved\tPowered by SvelteKit/Urara',
   author: {
