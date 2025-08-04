@@ -3,7 +3,7 @@ title: 'About Me!'
 image: '/hello-world/kita-ikuyo.jpg'
 alt: 'Shellkai Huang'
 created: 2022-11-25
-updated: 2024-09-22
+updated: 2025-08-04
 ---
 <script lang="ts">
   
@@ -26,7 +26,8 @@ import {
 	{ title: '第 54 屆全國技能競賽分區北區賽 39 資訊與網路技術 金牌 (rk.1)', time: '2024' },
 	{ title: '第 54 屆全國技能競賽全國賽 ⠀39 資訊與網路技術 銅牌 (rk.3)', time: '2024' },
 	{ title: '第 55 屆全國技能競賽分區北區賽 54 網路安全 佳作 (rk.7)', time: '2025' },
-	{ title: 'AIS3 MyFirstCTF 2025 (rk.57)', time: '2025' }
+	{ title: 'AIS3 MyFirstCTF 2025 (rk.57)', time: '2025' },
+	{ title: '第 55 屆全國技能競賽暨第 3 屆亞洲技能競賽及第 48 屆國際技能競賽國手選拔賽 39 資訊與網路技術', time: '2025' }
 	];
 	 const cert = [
 	{ title: 'GEPT 全民英檢 初級', time: '2020' },
@@ -67,7 +68,7 @@ import { onMount } from 'svelte';
 </div>
 </Profile>
 
-安安，我是 Shellkai，是個已經 {age.toFixed(10)} 歲的人類，就讀高職資訊科三年級，從一台 Android 手機開啟了我的資訊之旅，目前專攻於伺服器架設（Windows Server、Linux）、網管設備建置（Cisco Devices）、網路規劃及簡易的 Windows Server 及 Linux 的系統安全強化，希望未來能朝著資安的方向前進！
+大家好，我是 Shellkai，是個已經 {age.toFixed(10)} 歲的人類，從一台 Android 手機開啟了我的科技之旅，目前專攻於伺服器架設（Windows Server、Linux）、網路技術及規劃（NAT、Routing Protocol、Link Aggregation、Load Balance、GRE & IPSec Tunnel 及 VLAN 等）及系統安全強化，希望未來能朝著資安的方向前進！
 
 ## 競賽
 <Timeline position="alternate">
@@ -112,5 +113,5 @@ More Coming Soon...
 * RHCE (Red Hat Certified Engineer)
 
 ## 授課 / 其他經驗
-* 2023 松山工農 - 黑客 IT 社 工作室網路架設課程講師 & 活動長
-* 2024 松山工農技術中心@選手室 設備管理員
+* 2023 臺北市立松山工農 - 黑客 IT 社 工作室網路架設課程講師 & 活動長
+* 2024 臺北市立松山工農技術中心@資訊科選手室 設備管理員
