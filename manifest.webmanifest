@@ -1,0 +1,39 @@
+{
+  "name": "Shellkai",
+  "short_name": "Shellkai",
+  "lang": "zh-TW",
+  "description": "Copyright © ShellkaiTW 2025 - All right reserved\tPowered by SvelteKit/Urara",
+  "id": "https://shellkaitw.github.io/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#3D4451",
+  "theme_color": "#3D4451",
+  "icons": [
+    {
+      "src": "https://shellkaitw.github.io/assets/any@192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://shellkaitw.github.io/assets/any@512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://shellkaitw.github.io/assets/maskable@192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://shellkaitw.github.io/assets/maskable@512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

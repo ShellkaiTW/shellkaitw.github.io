@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://ntut.edu.tw/var/file/7/1007/msys_1007_5994215_49612.png">
+    <title>國立臺北科技大學校園安全通報 (unofficial)</title>
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --accent-color: #556b2f;
+            --hover-color: #394a1f;
+            --text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #111;
+            color: var(--primary-color);
+            overflow-x: hidden;
+        }
+
+        /* banner */
+        .banner {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            
+            /* background setting */
+            background-image: url('./portal_background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* cover */
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            z-index: 1;
+        }
+
+        /* container */
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 800px;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: var(--text-shadow);
+            letter-spacing: 2px;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        p.warning {
+            margin-top: 0rem;  /* 這裡控制與按鈕的距離，數字越大越往下 */
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            text-shadow: 0 2px 4px rgba(0,0,0,1);
+        }
+
+        /* buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        /* primary button */
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(162, 220, 62, 0.4);
+        }
+
+        /* secondary button */
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: #111;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* fadein animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* phone site fix */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="banner">
+        <div class="content">
+            <h1>NTUT SecureCampus</h1>
+            <p class="subtitle">If you encounter sales representatives or suspicious non-school personnel, please report them to us by the following methods.</p>
+            <p class="warning">This is an unofficial NTUT website, it's for Advanced ESP project use only!</p>
+
+            <div class="button-group">
+                <a href="https://docs.google.com" class="btn btn-primary" target="_blank">Google Form report</a>
+                <a href="https://www.line.me" class="btn btn-primary" target="_blank">LINE report</a>
+                <a href="https://ntut.edu.tw" class="btn btn-secondary" target="_blank">Official NTUT website</a>
+            </div>
+        </div>
+    </header>
+
+</body>
+</html>
