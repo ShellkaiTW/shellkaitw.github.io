@@ -8,9 +8,9 @@
   "bugs": "https://github.com/importantimport/urara/issues",
   "author": "藍+85CD",
   "packageManager": "pnpm@9.10.0",
-  "scripts": {
-    "sync": "svelte-kit sync",
-    "build": "run-s tsc urara:build kit:build clean",
+ "scripts": {
+    "sync": "svelte-kit sync",  
+    "build": "run-s sync tsc urara:build kit:build clean",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "clean": "node urara.js clean",
