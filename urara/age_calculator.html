@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年齡計算機</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* 改為 min-height 避免手機上內容被切掉 */
+            margin: 0;
+            padding: 20px; /* 增加一點邊距 */
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+        input[type="date"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: normal;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .highlight {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📅 年齡計算機</h2>
+    
+    <div class="input-group">
+        <label for="birthdate">1. 出生日期</label>
+        <input type="date" id="birthdate">
+    </div>
+
+    <div class="input-group">
+        <label for="targetdate">2. 計算目標日期</label>
+        <input type="date" id="targetdate">
+    </div>
+
+    <button onclick="calculateAge()">計算差距</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // 頁面載入時，自動填入今天的日期到「目標日期」
+    window.onload = function() {
+        const today = new Date();
+        // 格式化為 YYYY-MM-DD 以符合 input type="date" 的要求
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // 月份從0開始，需+1
+        const dd = String(today.getDate()).padStart(2, '0');
+        
+        document.getElementById('targetdate').value = `${yyyy}-${mm}-${dd}`;
+    };
+
+    function calculateAge() {
+        const birthInput = document.getElementById('birthdate').value;
+        const targetInput = document.getElementById('targetdate').value;
+        const resultDiv = document.getElementById('result');
+
+        // 重置樣式
+        resultDiv.className = ""; 
+        resultDiv.style.color = "#333";
+
+        // 檢查輸入
+        if (!birthInput || !targetInput) {
+            alert("請確保兩個日期都已選擇！");
+            return;
+        }
+
+        const birthDate = new Date(birthInput);
+        const targetDate = new Date(targetInput);
+
+        // 檢查邏輯：出生日期不能晚於目標日期
+        if (birthDate > targetDate) {
+            resultDiv.style.display = "block";
+            resultDiv.className = "error"; // 套用錯誤樣式
+            resultDiv.innerHTML = "⚠️ 錯誤：<br>「出生日期」不能晚於「目標日期」！";
+            return;
+        }
+
+        let years = targetDate.getFullYear() - birthDate.getFullYear();
+        let months = targetDate.getMonth() - birthDate.getMonth();
+        let days = targetDate.getDate() - birthDate.getDate();
+
+        // 處理日數借位
+        if (days < 0) {
+            months--;
+            // 取得目標日期「上個月」的天數來補
+            // 例如目標是 3月5日，要減去 20日。就去抓 2月有幾天。
+            const lastMonthDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+            days += lastMonthDate.getDate();
+        }
+
+        // 處理月數借位
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        // 顯示結果
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `在此日期的年齡為：<br>
+        <span class="highlight">${years}</span> 歲 
+        <span class="highlight">${months}</span> 個月 
+        <span class="highlight">${days}</span> 天`;
+    }
+</script>
+
+</body>
+</html>
