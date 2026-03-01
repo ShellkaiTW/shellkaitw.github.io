@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字轉換與統計工具</title>
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
+    <style>
+        /* 定義變數：淺色模式 (預設) */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --border-color: #e5e7eb;
+            --btn-bg: #ffffff;
+            --btn-hover: #f9fafb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --danger-color: #ef4444;
+            --danger-bg: #fef2f2;
+            --danger-border: #fee2e2;
+        }
+
+        /* 定義變數：深色模式 */
+        [data-theme="dark"] {
+            --primary-color: #818cf8;
+            --primary-hover: #6366f1;
+            --bg-color: #111827;      /* 深灰黑背景 */
+            --card-bg: #1f2937;       /* 卡片深灰 */
+            --text-main: #f3f4f6;     /* 淺灰白文字 */
+            --text-sub: #9ca3af;      /* 次要文字 */
+            --border-color: #374151;
+            --btn-bg: #374151;
+            --btn-hover: #4b5563;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --danger-color: #f87171;
+            --danger-bg: #451a1a;
+            --danger-border: #7f1d1d;
+        }
+
+        /* 全局過渡效果 */
+        body, .stat-card, .editor-section, button, textarea, h1, p {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        /* Header 與 切換按鈕佈局 */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .theme-switch-wrapper {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        p.subtitle {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* 統計區塊樣式 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        
+        [data-theme="dark"] .stat-card {
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        /* 輸入與操作區塊 */
+        .editor-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid transparent;
+        }
+
+        [data-theme="dark"] .editor-section {
+            border: 1px solid var(--border-color);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--btn-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        button:hover {
+            background-color: var(--btn-hover);
+            border-color: var(--text-sub);
+        }
+
+        button.primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        button.primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.danger {
+            color: var(--danger-color);
+            border-color: var(--danger-border);
+            background: var(--danger-bg);
+            margin-left: auto;
+        }
+
+        button.danger:hover {
+            filter: brightness(0.95);
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+            font-family: inherit;
+            background-color: var(--bg-color); /* 輸入框背景微調 */
+            color: var(--text-main);
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Theme Toggle Button Style */
+        .theme-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+        .theme-btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            button.danger {
+                margin-left: 0;
+                width: 100%;
+            }
+            .theme-switch-wrapper {
+                position: absolute;
+                top: -10px;
+                right: 0;
+            }
+            h1 {
+                margin-top: 10px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="theme-switch-wrapper">
+            <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="切換深色模式">
+                🌞
+            </button>
+        </div>
+        <h1>文字轉換與統計工具</h1>
+        <p class="subtitle">繁簡轉換 • 即時字數統計 • 文本分析</p>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value" id="count-total">0</span>
+            <span class="stat-label">總字數 (含標點)</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-lines">0</span>
+            <span class="stat-label">行列 (段落) 數</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-chinese">0</span>
+            <span class="stat-label">中文字數</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-cn-punct">0</span>
+            <span class="stat-label">中文標點</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-english">0</span>
+            <span class="stat-label">英文字數 (字母)</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-en-word">0</span>
+            <span class="stat-label">英文單詞數</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-en-punct">0</span>
+            <span class="stat-label">英文標點</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="count-number">0</span>
+            <span class="stat-label">數字字數</span>
+        </div>
+    </div>
+
+    <div class="editor-section">
+        <div class="toolbar">
+            <button class="primary" onclick="convertToTraditional()">轉繁體</button>
+            <button class="primary" onclick="convertToSimplified()">轉簡體</button>
+            <button onclick="copyText()">複製文字</button>
+            <button class="danger" onclick="clearText()">清空內容</button>
+        </div>
+        <textarea id="inputText" placeholder="請在此貼上或輸入文字..." oninput="calculateStats()"></textarea>
+    </div>
+</div>
+
+<script>
+    // --- 1. 深色模式邏輯 ---
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    
+    // SVG Icons
+    const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+    const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+    function updateThemeIcon(theme) {
+        themeToggleBtn.innerHTML = theme === 'dark' ? moonIcon : sunIcon;
+    }
+
+    function toggleTheme() {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        htmlEl.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme); // 儲存設定
+        updateThemeIcon(newTheme);
+    }
+
+    // 初始化：讀取儲存的設定 或 偵測系統偏好
+    (function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let themeToApply = 'light';
+        if (savedTheme) {
+            themeToApply = savedTheme;
+        } else if (systemPrefersDark) {
+            themeToApply = 'dark';
+        }
+
+        htmlEl.setAttribute('data-theme', themeToApply);
+        updateThemeIcon(themeToApply);
+    })();
+
+
+    // --- 2. OpenCC 與 統計邏輯 (維持不變) ---
+    let converterS2T = null;
+    let converterT2S = null;
+
+    async function initOpenCC() {
+        try {
+            const OpenCC = window.OpenCC;
+            converterS2T = await OpenCC.Converter({ from: 'cn', to: 'tw' });
+            converterT2S = await OpenCC.Converter({ from: 'tw', to: 'cn' });
+        } catch (e) {
+            console.error("OpenCC 初始化失敗", e);
+        }
+    }
+    window.addEventListener('load', initOpenCC);
+
+    async function convertToTraditional() {
+        const textarea = document.getElementById('inputText');
+        if (converterS2T) textarea.value = converterS2T(textarea.value);
+        calculateStats();
+    }
+
+    async function convertToSimplified() {
+        const textarea = document.getElementById('inputText');
+        if (converterT2S) textarea.value = converterT2S(textarea.value);
+        calculateStats();
+    }
+
+    function clearText() {
+        document.getElementById('inputText').value = '';
+        calculateStats();
+    }
+
+    function copyText() {
+        const textarea = document.getElementById('inputText');
+        textarea.select();
+        document.execCommand('copy');
+        const originalPlaceholder = textarea.placeholder;
+        textarea.placeholder = "已複製！";
+        setTimeout(() => textarea.placeholder = originalPlaceholder, 2000);
+    }
+
+    function calculateStats() {
+        const text = document.getElementById('inputText').value;
+        const cleanText = text.replace(/(\r\n|\n|\r)/gm, "");
+        
+        document.getElementById('count-total').innerText = cleanText.length;
+
+        const numbers = text.match(/\d/g);
+        document.getElementById('count-number').innerText = numbers ? numbers.length : 0;
+
+        if (text.length === 0) {
+            document.getElementById('count-lines').innerText = 0;
+        } else {
+            const lines = text.split(/\r\n|\r|\n/).length;
+            document.getElementById('count-lines').innerText = lines;
+        }
+
+        const chineseChars = text.match(/[\u4e00-\u9fa5]/g);
+        document.getElementById('count-chinese').innerText = chineseChars ? chineseChars.length : 0;
+
+        const cnPunctReg = /[\u3002\uff1b\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\u300a\u300b\u3010\u3011\uff01\u2026\u2014\u3000]/g;
+        const cnPunct = text.match(cnPunctReg);
+        document.getElementById('count-cn-punct').innerText = cnPunct ? cnPunct.length : 0;
+
+        const enChars = text.match(/[a-zA-Z]/g);
+        document.getElementById('count-english').innerText = enChars ? enChars.length : 0;
+
+        const enPunctReg = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g;
+        const enPunct = text.match(enPunctReg);
+        document.getElementById('count-en-punct').innerText = enPunct ? enPunct.length : 0;
+
+        const enWords = text.match(/\b[a-zA-Z-]+\b/g); 
+        document.getElementById('count-en-word').innerText = enWords ? enWords.length : 0;
+    }
+</script>
+
+</body>
+</html>

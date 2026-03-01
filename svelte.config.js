@@ -35,6 +35,7 @@ export default {
     },
     prerender: {
       handleMissingId: 'warn',
+      handleHttpError: 'warn'
     },
   },
   preprocess: [mdsvex(mdsvexConfig), vitePreprocess()],
